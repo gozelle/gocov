@@ -2,7 +2,7 @@ package gocovutil
 
 import (
 	"encoding/json"
-	"github.com/axw/gocov"
+	"github.com/gozelle/gocov"
 	"io/ioutil"
 	"os"
 	"sort"
@@ -37,7 +37,7 @@ func ReadPackages(filenames []string) (ps Packages, err error) {
 	copy(copy_, filenames)
 	filenames = copy_
 	sort.Strings(filenames)
-
+	
 	// Eliminate duplicates.
 	unique := []string{filenames[0]}
 	if len(filenames) > 1 {
@@ -47,7 +47,7 @@ func ReadPackages(filenames []string) (ps Packages, err error) {
 			}
 		}
 	}
-
+	
 	// Open files.
 	var files []*os.File
 	for _, f := range filenames {
@@ -62,7 +62,7 @@ func ReadPackages(filenames []string) (ps Packages, err error) {
 			files = append(files, os.Stdin)
 		}
 	}
-
+	
 	// Parse the files, accumulate Packages.
 	for _, file := range files {
 		data, err := ioutil.ReadAll(file)

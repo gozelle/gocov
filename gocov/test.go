@@ -29,9 +29,9 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
-
-	"github.com/axw/gocov/gocov/convert"
-	"github.com/axw/gocov/gocov/internal/testflag"
+	
+	"github.com/gozelle/gocov/gocov/convert"
+	"github.com/gozelle/gocov/gocov/internal/testflag"
 )
 
 // resolvePackages returns a slice of resolved package names, given a slice of
@@ -63,7 +63,7 @@ func runTests(args []string) error {
 	if err != nil {
 		return err
 	}
-
+	
 	tmpDir, err := ioutil.TempDir("", "gocov")
 	if err != nil {
 		return err
@@ -74,7 +74,7 @@ func runTests(args []string) error {
 			log.Printf("failed to clean up temp directory %q", tmpDir)
 		}
 	}()
-
+	
 	// Unique -coverprofile file names are used so that all the files can be
 	// later merged into a single file.
 	for i, pkg := range pkgs {
@@ -92,14 +92,14 @@ func runTests(args []string) error {
 			return err
 		}
 	}
-
+	
 	// Packages without tests will not produce a coverprofile; only pick up the
 	// ones that were created.
 	files, err := filepath.Glob(filepath.Join(tmpDir, "test*.cov"))
 	if err != nil {
 		return err
 	}
-
+	
 	// Merge the profiles.
 	out, err := convert.ConvertProfiles(files...)
 	os.Stdout.Write(out)

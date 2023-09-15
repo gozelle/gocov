@@ -26,9 +26,9 @@ import (
 	"fmt"
 	"io"
 	"os"
-
-	"github.com/axw/gocov"
-	"github.com/axw/gocov/gocov/convert"
+	
+	"github.com/gozelle/gocov"
+	"github.com/gozelle/gocov/gocov/convert"
 )
 
 func usage() {
@@ -59,7 +59,7 @@ func unmarshalJson(data []byte) (packages []*gocov.Package, err error) {
 func main() {
 	flag.Usage = usage
 	flag.Parse()
-
+	
 	command := ""
 	if flag.NArg() > 0 {
 		command = flag.Arg(0)

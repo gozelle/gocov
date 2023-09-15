@@ -30,8 +30,8 @@ import (
 	"regexp"
 	"sort"
 	"strings"
-
-	"github.com/axw/gocov"
+	
+	"github.com/gozelle/gocov"
 )
 
 const (
@@ -103,7 +103,7 @@ func annotateSource() (rc int) {
 		fmt.Fprintf(os.Stderr, "missing coverage file\n")
 		return 1
 	}
-
+	
 	var data []byte
 	var err error
 	if filename := annotateFlags.Arg(0); filename == "-" {
@@ -115,24 +115,24 @@ func annotateSource() (rc int) {
 		fmt.Fprintf(os.Stderr, "failed to read coverage file: %s\n", err)
 		return 1
 	}
-
+	
 	packages, err := unmarshalJson(data)
 	if err != nil {
 		fmt.Fprintf(
 			os.Stderr, "failed to unmarshal coverage data: %s\n", err)
 		return 1
 	}
-
+	
 	// Sort packages, functions by name.
 	sort.Sort(packageList(packages))
 	for _, pkg := range packages {
 		sort.Sort(functionList(pkg.Functions))
 	}
-
+	
 	a := &annotator{}
 	a.fset = token.NewFileSet()
 	a.files = make(map[string]*token.File)
-
+	
 	var regexps []*regexp.Regexp
 	for _, arg := range annotateFlags.Args()[1:] {
 		re, err := regexp.Compile(arg)
@@ -178,7 +178,7 @@ func (a *annotator) printFunctionSource(fn *gocov.Function) error {
 		file = a.fset.AddFile(fn.File, a.fset.Base(), int(info.Size()))
 		setContent = true
 	}
-
+	
 	data, err := ioutil.ReadFile(fn.File)
 	if err != nil {
 		return err
@@ -187,7 +187,7 @@ func (a *annotator) printFunctionSource(fn *gocov.Function) error {
 		// This processes the content and records line number info.
 		file.SetLinesForContent(data)
 	}
-
+	
 	statements := fn.Statements[:]
 	lineno := file.Line(file.Pos(fn.Start))
 	lines := strings.Split(string(data)[fn.Start:fn.End], "\n")
@@ -233,6 +233,6 @@ func (a *annotator) printFunctionSource(fn *gocov.Function) error {
 		}
 	}
 	fmt.Println()
-
+	
 	return nil
 }

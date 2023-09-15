@@ -31,8 +31,8 @@ import (
 	"sort"
 	"strings"
 	"text/tabwriter"
-
-	"github.com/axw/gocov"
+	
+	"github.com/gozelle/gocov"
 )
 
 type report struct {
@@ -115,27 +115,27 @@ func functionReports(pkg *gocov.Package) reportFunctionList {
 		}
 		functions[i] = reportFunction{fn, reached}
 	}
-
+	
 	return functions
-
+	
 }
 
 // printTotalCoverage outputs the combined coverage for each
 // package
 func (r *report) printTotalCoverage(w io.Writer) {
 	var totalStatements, totalReached int
-
+	
 	for _, pkg := range r.packages {
 		functions := functionReports(pkg)
 		sort.Sort(reverse{functions})
-
+		
 		for _, fn := range functions {
 			reached := fn.statementsReached
 			totalStatements += len(fn.Statements)
 			totalReached += reached
 		}
 	}
-
+	
 	coveragePercentage := float64(totalReached) / float64(totalStatements) * 100
 	if math.IsNaN(coveragePercentage) {
 		coveragePercentage = 0
@@ -159,7 +159,7 @@ func printReport(w io.Writer, r *report) {
 func printPackage(w io.Writer, pkg *gocov.Package) {
 	functions := functionReports(pkg)
 	sort.Sort(reverse{functions})
-
+	
 	var longestFunctionName int
 	var totalStatements, totalReached int
 	for _, fn := range functions {
@@ -177,7 +177,7 @@ func printPackage(w io.Writer, pkg *gocov.Package) {
 			pkg.Name, filepath.Base(fn.File), fn.Name, stmtPercent,
 			reached, len(fn.Statements))
 	}
-
+	
 	var funcPercent float64
 	if totalStatements > 0 {
 		funcPercent = float64(totalReached) / float64(totalStatements) * 100

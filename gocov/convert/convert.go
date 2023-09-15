@@ -31,9 +31,9 @@ import (
 	"io"
 	"path/filepath"
 	"strings"
-
-	"github.com/axw/gocov"
-	"github.com/axw/gocov/gocovutil"
+	
+	"github.com/gozelle/gocov"
+	"github.com/gozelle/gocov/gocovutil"
 	"golang.org/x/tools/cover"
 )
 
@@ -48,7 +48,7 @@ func ConvertProfiles(filenames ...string) ([]byte, error) {
 		ps       gocovutil.Packages
 		packages = make(packagesCache)
 	)
-
+	
 	for i := range filenames {
 		converter := converter{
 			packages: make(map[string]*gocov.Package),
@@ -62,7 +62,7 @@ func ConvertProfiles(filenames ...string) ([]byte, error) {
 				return nil, err
 			}
 		}
-
+		
 		for _, pkg := range converter.packages {
 			ps.AddPackage(pkg)
 		}
@@ -155,7 +155,7 @@ func findFile(packages packagesCache, file string) (filename, pkgpath string, er
 		}
 		packages[dir] = pkg
 	}
-
+	
 	return filepath.Join(pkg.Dir, file), pkg.ImportPath, nil
 }
 
